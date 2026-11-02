@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobFlow - Nerdy Stats 2</title>
+    
+    <!-- Framework7 Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/framework7-icons/css/framework7-icons.min.css">
+    
+    <!-- Plotly.js CDN -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .nav-bar {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 16px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.85em;
+            font-weight: 600;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            min-width: 80px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .nav-btn:hover {
+            background: #f0f2ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            text-decoration: none;
+            color: #667eea;
+        }
+        
+        .nav-btn.active {
+            border: 2px solid #667eea;
+            background: #eef2ff;
+            color: #333;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .nav-btn i {
+            font-size: 1.8em;
+            margin-bottom: 4px;
+            display: block;
+        }
+        
+        .nav-btn span {
+            font-size: 0.9em;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        .filters {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .filter-group label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.9em;
+        }
+        
+        .filter-group select, .filter-group input {
+            padding: 8px 12px;
+            border: 2px solid #ced4da;
+            border-radius: 6px;
+            font-size: 0.9em;
+            min-width: 120px;
+        }
+        
+        .filter-group select:focus, .filter-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .apply-filters-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+        
+        .apply-filters-btn:hover {
+            background: #5a6fd8;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-header h2 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.8em;
+            color: #495057;
+            font-weight: 700;
+        }
+        
+        .toggle-btn {
+            padding: 8px 16px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .toggle-btn:hover {
+            background: #5a6268;
+        }
+        
+        .toggle-btn.active {
+            background: #667eea;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .chart-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chart-title {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .chart-plot {
+            width: 100%;
+            height: 450px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .chart-plot .js-plotly-plot {
+            width: 100% !important;
+        }
+        
+        .export-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .export-btn {
+            padding: 8px 16px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .export-btn:hover {
+            background: #218838;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.1em;
+            color: #6c757d;
+        }
+        
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .charts-grid {
+                gap: 20px;
+            }
+            
+            .chart-container {
+                padding: 15px;
+            }
+            
+            .chart-plot {
+                height: 350px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='blue-theme.css') }}">
+</head>
+<body>
+    <div id="jobflow-auth-shell" class="jobflow-auth-shell">
+        <span class="jobflow-auth-user">{{ current_username or 'Unknown user' }}</span>
+        <button id="jobflow-logout-button" class="jobflow-auth-logout" type="button">Logout</button>
+    </div>
+    <div class="container">
+        <header>
+            <h1>Nerdy Stats 2</h1>
+            <p>Advanced Analytics - Scatter Plots & Heatmaps for Behavioral Insights</p>
+        </header>
+        
+        <div class="nav-bar">
+            <a href="/" class="nav-btn">
+                <i class="f7-icons">arrow_left</i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#scatter-section" class="nav-btn active">
+                <i class="f7-icons">chart_bar_alt_fill</i>
+                <span>Scatter Plots</span>
+            </a>
+            <a href="#heatmap-section" class="nav-btn">
+                <i class="f7-icons">grid_fill</i>
+                <span>Heatmaps</span>
+            </a>
+        </div>
+        
+        <div class="filters">
+            <div class="filter-group">
+                <label for="year-filter">Year</label>
+                <select id="year-filter">
+                    <option value="">All Years</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="source-filter">Source</label>
+                <select id="source-filter">
+                    <option value="">All Sources</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="status-filter">Status</label>
+                <select id="status-filter">
+                    <option value="">All Statuses</option>
+                </select>
+            </div>
+            
+            <button class="apply-filters-btn" onclick="loadAllCharts()">Apply Filters</button>
+        </div>
+        
+        <div class="content">
+            <!-- Scatter Plots Section -->
+            <div class="section" id="scatter-section">
+                <div class="section-header">
+                    <h2>Scatter Plots</h2>
+                    <button class="toggle-btn" id="scatter-toggle" onclick="toggleSection('scatter')">Hide</button>
+                </div>
+                
+                <div id="scatter-content">
+                    <div class="loading" id="scatter-loading">Loading scatter plots...</div>
+                    <div class="error" id="scatter-error" style="display: none;"></div>
+                    
+                    <div class="charts-grid" id="scatter-charts" style="display: none;">
+                        <div class="chart-container">
+                            <div class="chart-title">Applications Over Time</div>
+                            <div id="scatter-apps-time" class="chart-plot"></div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <div class="chart-title">Mood vs Productivity</div>
+                            <div id="scatter-mood-productivity" class="chart-plot"></div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <div class="chart-title">Follow-Up Timing vs Outcome</div>
+                            <div id="scatter-followup-timing" class="chart-plot"></div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <div class="chart-title">Duration to Close vs Source</div>
+                            <div id="scatter-duration-source" class="chart-plot"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Heatmaps Section -->
+            <div class="section" id="heatmap-section">
+                <div class="section-header">
+                    <h2>Heatmaps</h2>
+                    <button class="toggle-btn" id="heatmap-toggle" onclick="toggleSection('heatmap')">Hide</button>
+                </div>
+                
+                <div id="heatmap-content">
+                    <div class="loading" id="heatmap-loading">Loading heatmaps...</div>
+                    <div class="error" id="heatmap-error" style="display: none;"></div>
+                    
+                    <div class="charts-grid" id="heatmap-charts" style="display: none;">
+                        <div class="chart-container">
+                            <div class="chart-title">Applications per Weekday × Week</div>
+                            <div id="heatmap-weekday-week" class="chart-plot"></div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <div class="chart-title">Follow-Up Intensity Map</div>
+                            <div id="heatmap-followup-intensity" class="chart-plot"></div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <div class="chart-title">Mood vs Activity</div>
+                            <div id="heatmap-mood-activity" class="chart-plot"></div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <div class="chart-title">Hourly Engagement Map</div>
+                            <div id="heatmap-hourly-engagement" class="chart-plot"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Export Section -->
+            <div class="export-buttons">
+                <button class="export-btn" onclick="exportAllCharts()">Save All as PNG</button>
+                <button class="export-btn" onclick="exportFilteredData()">Export Filtered CSV</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentFilters = {
+            year: null,
+            source: '',
+            status: ''
+        };
+        
+        // Initialize page
+        $(document).ready(function() {
+            loadFilters();
+            loadAllCharts();
+            
+            // Set default year to current year
+            const currentYear = new Date().getFullYear();
+            $('#year-filter').val(currentYear);
+            currentFilters.year = currentYear;
+        });
+        
+        // Load filter options
+        async function loadFilters() {
+            try {
+                // Load years
+                const yearsResponse = await fetch('/api/years');
+                const yearsData = await yearsResponse.json();
+                const yearSelect = $('#year-filter');
+                
+                if (yearsData.years) {
+                    yearsData.years.forEach(year => {
+                        yearSelect.append(`<option value="${year}">${year}</option>`);
+                    });
+                }
+                
+                // Load jobs to get sources and statuses
+                const jobsResponse = await fetch('/api/jobs');
+                const jobsData = await jobsResponse.json();
+                
+                if (Array.isArray(jobsData) && jobsData.length > 0) {
+                    const sources = [...new Set(jobsData.map(j => j.source).filter(s => s))];
+                    const statuses = [...new Set(jobsData.map(j => j.status).filter(s => s))];
+                    
+                    const sourceSelect = $('#source-filter');
+                    const statusSelect = $('#status-filter');
+                    
+                    sources.sort().forEach(source => {
+                        sourceSelect.append(`<option value="${source}">${source}</option>`);
+                    });
+                    
+                    statuses.sort().forEach(status => {
+                        statusSelect.append(`<option value="${status}">${status}</option>`);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading filters:', error);
+            }
+        }
+        
+        // Load all charts
+        async function loadAllCharts() {
+            // Update filters from UI
+            currentFilters.year = $('#year-filter').val() || null;
+            currentFilters.source = $('#source-filter').val() || '';
+            currentFilters.status = $('#status-filter').val() || '';
+            
+            // Save filters to localStorage
+            localStorage.setItem('stats2_filters', JSON.stringify(currentFilters));
+            
+            await Promise.all([
+                loadScatterPlots(),
+                loadHeatmaps()
+            ]);
+        }
+        
+        // Load scatter plots
+        async function loadScatterPlots() {
+            const loadingEl = $('#scatter-loading');
+            const errorEl = $('#scatter-error');
+            const chartsEl = $('#scatter-charts');
+            
+            try {
+                loadingEl.show();
+                errorEl.hide();
+                chartsEl.hide();
+                
+                const params = new URLSearchParams();
+                if (currentFilters.year) params.append('year', currentFilters.year);
+                if (currentFilters.source) params.append('source', currentFilters.source);
+                if (currentFilters.status) params.append('status', currentFilters.status);
+                
+                const response = await fetch(`/api/stats2/scatter?${params}`);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to load scatter plots');
+                }
+                
+                const payload = (data && typeof data === 'object' && data.data) ? data.data : data;
+                if (payload && typeof payload === 'object') {
+                    loadingEl.hide();
+                    // Render only after container is visible so Plotly calculates full width.
+                    chartsEl.css('visibility', 'hidden').show();
+                    renderScatterPlots(payload);
+                    chartsEl.css('visibility', 'visible');
+                    setTimeout(() => resizeChartsByIds([
+                        'scatter-apps-time',
+                        'scatter-mood-productivity',
+                        'scatter-followup-timing',
+                        'scatter-duration-source'
+                    ]), 50);
+                } else {
+                    throw new Error('Invalid response format');
+                }
+                
+            } catch (error) {
+                console.error('Error loading scatter plots:', error);
+                loadingEl.hide();
+                errorEl.text(`Error loading scatter plots: ${error.message}`).show();
+            }
+        }
+        
+        // Load heatmaps
+        async function loadHeatmaps() {
+            const loadingEl = $('#heatmap-loading');
+            const errorEl = $('#heatmap-error');
+            const chartsEl = $('#heatmap-charts');
+            
+            try {
+                loadingEl.show();
+                errorEl.hide();
+                chartsEl.hide();
+                
+                const params = new URLSearchParams();
+                if (currentFilters.year) params.append('year', currentFilters.year);
+                if (currentFilters.source) params.append('source', currentFilters.source);
+                if (currentFilters.status) params.append('status', currentFilters.status);
+                
+                const response = await fetch(`/api/stats2/heatmap?${params}`);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to load heatmaps');
+                }
+                
+                const payload = (data && typeof data === 'object' && data.data) ? data.data : data;
+                if (payload && typeof payload === 'object') {
+                    loadingEl.hide();
+                    // Render only after container is visible so Plotly calculates full width.
+                    chartsEl.css('visibility', 'hidden').show();
+                    renderHeatmaps(payload);
+                    chartsEl.css('visibility', 'visible');
+                    setTimeout(() => resizeChartsByIds([
+                        'heatmap-weekday-week',
+                        'heatmap-followup-intensity',
+                        'heatmap-mood-activity',
+                        'heatmap-hourly-engagement'
+                    ]), 50);
+                } else {
+                    throw new Error('Invalid response format');
+                }
+                
+            } catch (error) {
+                console.error('Error loading heatmaps:', error);
+                loadingEl.hide();
+                errorEl.text(`Error loading heatmaps: ${error.message}`).show();
+            }
+        }
+        
+        // Render scatter plots
+        function renderScatterPlots(data) {
+            const commonLayout = {
+                font: { family: 'Lato, sans-serif' },
+                margin: { t: 50, r: 20, b: 80, l: 50 },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                autosize: true,
+                height: 400,
+                width: null,
+                legend: {
+                    orientation: 'h',
+                    x: 0.5,
+                    xanchor: 'center',
+                    y: -0.15
+                }
+            };
+            
+            const config = { displayModeBar: false, responsive: true };
+            
+            // Applications Over Time
+            if (data.applications_over_time) {
+                const sources = [...new Set(data.applications_over_time.map(d => d.source || 'Unknown'))];
+                const traces = sources.map(source => ({
+                    x: data.applications_over_time.filter(d => (d.source || 'Unknown') === source).map(d => d.date),
+                    y: data.applications_over_time.filter(d => (d.source || 'Unknown') === source).map(d => d.cumulative_count),
+                    text: data.applications_over_time.filter(d => (d.source || 'Unknown') === source).map(d => `Source: ${d.source || 'Unknown'}<br>Status: ${d.status || 'Unknown'}<br>Date: ${d.date}<br>Cumulative: ${d.cumulative_count}`),
+                    mode: 'markers+lines',
+                    type: 'scatter',
+                    name: source,
+                    hovertemplate: '%{text}<extra></extra>'
+                }));
+                
+                Plotly.newPlot('scatter-apps-time', traces, {
+                    ...commonLayout,
+                    title: 'Cumulative Applications Over Time',
+                    xaxis: { title: 'Date Applied' },
+                    yaxis: { title: 'Cumulative Count' }
+                }, config);
+            }
+            
+            // Mood vs Productivity
+            if (data.mood_vs_productivity) {
+                const moods = [...new Set(data.mood_vs_productivity.map(d => d.mood || 'Linked Entry'))];
+                const traces = moods.map(mood => ({
+                    x: data.mood_vs_productivity.filter(d => (d.mood || 'Linked Entry') === mood).map(d => d.sentiment_score),
+                    y: data.mood_vs_productivity.filter(d => (d.mood || 'Linked Entry') === mood).map(d => d.productivity),
+                    text: data.mood_vs_productivity.filter(d => (d.mood || 'Linked Entry') === mood).map(d => `Date: ${d.date}<br>Sentiment: ${d.sentiment_score}<br>Productivity: ${d.productivity}`),
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: mood,
+                    hovertemplate: '%{text}<extra></extra>'
+                }));
+                
+                Plotly.newPlot('scatter-mood-productivity', traces, {
+                    ...commonLayout,
+                    title: 'Daily Sentiment vs Applications',
+                    xaxis: { title: 'Sentiment Score' },
+                    yaxis: { title: 'Applications Count' }
+                }, config);
+            }
+            
+            // Follow-Up Timing vs Outcome
+            const followupTimingData = data.followup_timing_vs_outcome || data.followup_timing_outcome;
+            if (followupTimingData) {
+                const statuses = [...new Set(followupTimingData.map(d => d.outcome || d.status || 'Unknown'))];
+                const traces = statuses.map(status => ({
+                    x: followupTimingData.filter(d => (d.outcome || d.status || 'Unknown') === status).map(d => d.days_after_application ?? d.x),
+                    y: followupTimingData.filter(d => (d.outcome || d.status || 'Unknown') === status).map(d => d.type || d.y),
+                    text: followupTimingData.filter(d => (d.outcome || d.status || 'Unknown') === status).map(d => `Outcome: ${d.outcome || d.status || 'Unknown'}<br>Type: ${d.type || 'Unknown'}<br>Days After Application: ${d.days_after_application ?? d.x}`),
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: status,
+                    hovertemplate: '%{text}<extra></extra>'
+                }));
+                
+                Plotly.newPlot('scatter-followup-timing', traces, {
+                    ...commonLayout,
+                    title: 'Follow-Up Response Time vs Engagement',
+                    xaxis: { title: 'Days Since Application' },
+                    yaxis: { title: 'Follow-Up Type' }
+                }, config);
+            }
+            
+            // Duration to Close vs Source
+            const durationData = data.duration_to_close_vs_source || data.duration_vs_source;
+            if (durationData) {
+                const statuses = [...new Set(durationData.map(d => d.outcome || d.status || 'Unknown'))];
+                const traces = statuses.map(status => ({
+                    x: durationData.filter(d => (d.outcome || d.status || 'Unknown') === status).map(d => d.source || d.x),
+                    y: durationData.filter(d => (d.outcome || d.status || 'Unknown') === status).map(d => d.duration_days ?? d.y),
+                    text: durationData.filter(d => (d.outcome || d.status || 'Unknown') === status).map(d => `Outcome: ${d.outcome || d.status || 'Unknown'}<br>Source: ${d.source || 'Unknown'}<br>Duration: ${d.duration_days ?? d.y} days`),
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: status,
+                    hovertemplate: '%{text}<extra></extra>'
+                }));
+                
+                Plotly.newPlot('scatter-duration-source', traces, {
+                    ...commonLayout,
+                    title: 'Time to Resolution by Source',
+                    xaxis: { title: 'Source' },
+                    yaxis: { title: 'Days to Close' }
+                }, config);
+            }
+        }
+        
+        // Render heatmaps
+        function renderHeatmaps(data) {
+            const commonLayout = {
+                font: { family: 'Lato, sans-serif' },
+                margin: { t: 50, r: 20, b: 100, l: 80 },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                autosize: true,
+                height: 400,
+                width: null
+            };
+            
+            const config = { displayModeBar: false, responsive: true };
+            
+            // Applications Weekday Week
+            if (data.applications_weekday_week) {
+                const heatmapData = data.applications_weekday_week;
+                Plotly.newPlot('heatmap-weekday-week', [{
+                    z: heatmapData.z,
+                    x: heatmapData.x,
+                    y: heatmapData.y,
+                    type: 'heatmap',
+                    colorscale: heatmapData.colorscale || 'Blues',
+                    hoverongaps: false
+                }], {
+                    ...commonLayout,
+                    title: 'Application Activity by Week & Weekday',
+                    xaxis: { title: 'Week' },
+                    yaxis: { title: 'Day of Week' }
+                }, config);
+            }
+            
+            // Follow-Up Intensity
+            if (data.followup_intensity) {
+                const heatmapData = data.followup_intensity;
+                Plotly.newPlot('heatmap-followup-intensity', [{
+                    z: heatmapData.z,
+                    x: heatmapData.x,
+                    y: heatmapData.y,
+                    type: 'heatmap',
+                    colorscale: heatmapData.colorscale || 'RdYlGn',
+                    hoverongaps: false
+                }], {
+                    ...commonLayout,
+                    title: 'Follow-Up Activity by Type & Week',
+                    xaxis: { title: 'Week' },
+                    yaxis: { title: 'Follow-Up Type' }
+                }, config);
+            }
+            
+            // Mood vs Activity
+            console.log('Mood vs Activity data:', data.mood_vs_activity);
+            if (data.mood_vs_activity) {
+                const heatmapData = data.mood_vs_activity;
+                console.log('Rendering Mood vs Activity heatmap:', heatmapData);
+                Plotly.newPlot('heatmap-mood-activity', [{
+                    z: heatmapData.z,
+                    x: heatmapData.x,
+                    y: heatmapData.y,
+                    type: 'heatmap',
+                    colorscale: heatmapData.colorscale || 'PuBuGn',
+                    hoverongaps: false
+                }], {
+                    ...commonLayout,
+                    title: 'Activity Patterns by Mood',
+                    xaxis: { title: 'Mood Category' },
+                    yaxis: { title: 'Activity Type' }
+                }, config);
+            } else {
+                console.warn('No mood_vs_activity data available');
+            }
+            
+            // Hourly Engagement
+            if (data.hourly_engagement) {
+                const heatmapData = data.hourly_engagement;
+                Plotly.newPlot('heatmap-hourly-engagement', [{
+                    z: heatmapData.z,
+                    x: heatmapData.x,
+                    y: heatmapData.y,
+                    type: 'heatmap',
+                    colorscale: heatmapData.colorscale || 'Viridis',
+                    hoverongaps: false
+                }], {
+                    ...commonLayout,
+                    title: 'Engagement Patterns by Hour & Day',
+                    xaxis: { title: 'Hour of Day' },
+                    yaxis: { title: 'Day of Week' }
+                }, config);
+            }
+        }
+        
+        // Toggle section visibility
+        function toggleSection(section) {
+            const content = $(`#${section}-content`);
+            const toggle = $(`#${section}-toggle`);
+            
+            if (content.is(':visible')) {
+                content.hide();
+                toggle.text('Show').removeClass('active');
+            } else {
+                content.show();
+                toggle.text('Hide').addClass('active');
+            }
+        }
+        
+        // Export all charts as PNG
+        function exportAllCharts() {
+            const charts = [
+                'scatter-apps-time',
+                'scatter-mood-productivity', 
+                'scatter-followup-timing',
+                'scatter-duration-source',
+                'heatmap-weekday-week',
+                'heatmap-followup-intensity',
+                'heatmap-mood-activity',
+                'heatmap-hourly-engagement'
+            ];
+            
+            charts.forEach(chartId => {
+                const element = document.getElementById(chartId);
+                if (element && element.data) {
+                    Plotly.toImage(element, {
+                        format: 'png',
+                        width: 800,
+                        height: 600
+                    }).then(url => {
+                        const link = document.createElement('a');
+                        link.download = `${chartId}.png`;
+                        link.href = url;
+                        link.click();
+                    });
+                }
+            });
+        }
+        
+        // Export filtered data as CSV
+        async function exportFilteredData() {
+            try {
+                const params = new URLSearchParams();
+                if (currentFilters.year) params.append('year', currentFilters.year);
+                if (currentFilters.source) params.append('source', currentFilters.source);
+                if (currentFilters.status) params.append('status', currentFilters.status);
+                
+                const response = await fetch(`/api/jobs?${params}`);
+                const data = await response.json();
+                
+                const rows = Array.isArray(data) ? data : (data.jobs || []);
+                if (rows.length) {
+                    const csv = convertToCSV(rows);
+                    downloadCSV(csv, `filtered_jobs_${new Date().toISOString().split('T')[0]}.csv`);
+                }
+            } catch (error) {
+                console.error('Error exporting data:', error);
+                alert('Error exporting data: ' + error.message);
+            }
+        }
+        
+        // Convert array to CSV
+        function convertToCSV(array) {
+            if (!array.length) return '';
+            
+            const headers = Object.keys(array[0]);
+            const csvContent = [
+                headers.join(','),
+                ...array.map(row => 
+                    headers.map(header => 
+                        JSON.stringify(row[header] || '')
+                    ).join(',')
+                )
+            ].join('\n');
+            
+            return csvContent;
+        }
+        
+        // Download CSV file
+        function downloadCSV(csv, filename) {
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.click();
+            window.URL.revokeObjectURL(url);
+        }
+        
+        // Load saved filters on page load
+        function loadSavedFilters() {
+            const saved = localStorage.getItem('stats2_filters');
+            if (saved) {
+                try {
+                    const filters = JSON.parse(saved);
+                    if (filters.year) $('#year-filter').val(filters.year);
+                    if (filters.source) $('#source-filter').val(filters.source);
+                    if (filters.status) $('#status-filter').val(filters.status);
+                    currentFilters = filters;
+                } catch (error) {
+                    console.error('Error loading saved filters:', error);
+                }
+            }
+        }
+        
+        // Resize all charts to fit containers
+        function resizeChartsByIds(chartIds) {
+            chartIds.forEach(id => {
+                const element = document.getElementById(id);
+                if (element && element._fullLayout) {
+                    Plotly.Plots.resize(element);
+                }
+            });
+        }
+
+        function resizeAllCharts() {
+            resizeChartsByIds([
+                'scatter-apps-time', 'scatter-mood-productivity', 
+                'scatter-followup-timing', 'scatter-duration-source',
+                'heatmap-weekday-week', 'heatmap-followup-intensity',
+                'heatmap-mood-activity', 'heatmap-hourly-engagement'
+            ]);
+        }
+        
+        // Resize charts when window is resized
+        window.addEventListener('resize', resizeAllCharts);
+        
+        // Initialize saved filters after DOM is ready
+        $(document).ready(function() {
+            setTimeout(loadSavedFilters, 500); // Wait for filter options to load
+            setTimeout(resizeAllCharts, 1000); // Resize charts after they're loaded
+        });
+    </script>
+</body>
+<script>
+    (function () {
+        const originalFetch = window.fetch.bind(window);
+        window.fetch = async function (...args) {
+            const response = await originalFetch(...args);
+            if (response.status === 401) {
+                const next = encodeURIComponent(window.location.pathname + window.location.search);
+                window.location.href = `/login?next=${next}`;
+                throw new Error('Authentication required');
+            }
+            return response;
+        };
+
+        const logoutButton = document.getElementById('jobflow-logout-button');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', async () => {
+                await originalFetch('/api/auth/logout', { method: 'POST' });
+                window.location.href = '/login';
+            });
+        }
+    }());
+</script>
+</html>

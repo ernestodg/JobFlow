@@ -1,0 +1,36 @@
+# Azure Container Apps Configuration
+# Deploy JobFlow with serverless pay-as-you-go pricing
+
+location: eastus2
+resourceGroupName: rg-jobflow
+containerAppName: jobflow-app
+containerAppEnvName: jobflow-env
+
+# Container configuration
+containerImage: jobflow:latest
+containerPort: 5001
+
+# Scaling configuration (pay-as-you-go)
+minReplicas: 0  # Scale to zero when no traffic
+maxReplicas: 5  # Scale up based on demand
+cpuRequests: "0.25"
+memoryRequests: "0.5Gi"
+
+# Environment variables
+environment:
+  - name: "FLASK_ENV"
+    value: "production"
+  - name: "PORT"
+    value: "5001"
+  - name: "PYTHONPATH"
+    value: "/app"
+
+# Ingress configuration
+ingress:
+  external: true
+  targetPort: 5001
+  allowInsecure: false
+
+# Identity and access
+identity:
+  type: "SystemAssigned"

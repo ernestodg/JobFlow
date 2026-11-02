@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${JOBFLOW_POSTGRES_PASSWORD:?Set JOBFLOW_POSTGRES_PASSWORD}
+      POSTGRES_DB: jobflow
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: JobFlow
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5001:5001"
+    environment:
+      JOBFLOW_DATABASE_URL: ${JOBFLOW_DATABASE_URL:?Set JOBFLOW_DATABASE_URL}
+      JOBFLOW_SECRET_KEY: ${JOBFLOW_SECRET_KEY:?Set JOBFLOW_SECRET_KEY}
+    volumes:
+      - app_data:/app/data
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  app_data:

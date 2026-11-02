@@ -1,0 +1,351 @@
+:root {
+    --bg: #e8f2ff;
+    --panel: rgba(248, 252, 255, 0.96);
+    --panel-strong: rgba(255, 255, 255, 0.98);
+    --line: rgba(24, 56, 98, 0.14);
+    --text: #10223d;
+    --muted: #4d6486;
+    --accent: #2f6dff;
+    --accent-soft: #d9e7ff;
+    --accent-deep: #1743a2;
+    --accent-night: #0f2e70;
+    --success: #1f8f7a;
+    --warn: #c98923;
+    --danger: #d24f5f;
+    --shadow: 0 24px 70px rgba(16, 44, 84, 0.14);
+}
+
+body {
+    font-family: 'Source Sans 3', sans-serif;
+    color: var(--text);
+    background:
+        radial-gradient(circle at top left, rgba(114, 176, 255, 0.42), transparent 32%),
+        radial-gradient(circle at top right, rgba(155, 224, 255, 0.5), transparent 30%),
+        linear-gradient(180deg, #f0f7ff 0%, #e4eefb 100%);
+}
+
+h1,
+h2,
+h3,
+.tab-btn,
+.timeline-col-title,
+.year-badge,
+.chart-title,
+.section-header h2,
+.section-head h3,
+.modal-header h2,
+.month-group-title {
+    font-family: 'Space Grotesk', sans-serif !important;
+}
+
+.container {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    box-shadow: var(--shadow);
+}
+
+header,
+.modal-header {
+    background: linear-gradient(135deg, rgba(12, 33, 69, 0.97), rgba(23, 67, 162, 0.94));
+    color: #eef5ff;
+}
+
+footer,
+.loading,
+.filter-group label,
+.year-filter label,
+.section-header p,
+.chart-title,
+.month-group-count,
+.calendar-day-number,
+.leaflet-popup-content,
+.jobflow-auth-user {
+    color: var(--muted);
+}
+
+header p {
+    color: #c5dafc;
+}
+
+.controls,
+.filters,
+.nav-bar,
+.tabs,
+footer,
+.grid-filters,
+.chart-container,
+.stats-card,
+.timeline-col,
+.month-group,
+.calendar-day,
+.modal-content,
+.journal-right-panel,
+.journal-left-panel,
+.table-container,
+.data-grid-section,
+.hero-list div {
+    background: var(--panel-strong);
+    border-color: var(--line) !important;
+}
+
+.chart-section h2,
+.map-section h3 {
+    color: var(--text);
+    border-bottom-color: var(--accent);
+}
+
+.chart-container,
+.timeline-col,
+.stats-card,
+.month-group,
+.hire-card,
+.timeline-empty,
+.calendar-day,
+.modal-content,
+.next-action-box,
+.table-card,
+table.dataTable,
+table.display {
+    background: var(--panel-strong);
+    border: 1px solid var(--line);
+    box-shadow: 0 18px 44px rgba(16, 44, 84, 0.08);
+}
+
+#sankey-chart,
+#status-chart {
+    background: #ffffff !important;
+    border: 1px solid var(--line);
+    box-shadow: 0 18px 44px rgba(16, 44, 84, 0.08);
+}
+
+.year-btn,
+.nav-btn,
+.tab-btn,
+.btn-primary,
+.apply-filters-btn,
+.btn-sm,
+button,
+.toggle-btn,
+.export-btn {
+    background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+    color: #f8fbff;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 24px rgba(47, 109, 255, 0.22);
+}
+
+.year-btn,
+.nav-btn,
+.tab-btn {
+    background: white;
+    color: var(--accent-deep);
+    border: 1px solid rgba(47, 109, 255, 0.2);
+    box-shadow: 0 10px 24px rgba(16, 44, 84, 0.08);
+}
+
+.year-btn:hover,
+.nav-btn:hover,
+.tab-btn:hover,
+.btn-primary:hover,
+.apply-filters-btn:hover,
+.btn-sm:hover,
+button:hover,
+.toggle-btn:hover,
+.export-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 30px rgba(23, 67, 162, 0.22);
+}
+
+.year-btn:hover,
+.nav-btn:hover,
+.tab-btn:hover {
+    background: var(--accent-soft);
+    color: var(--accent-night);
+}
+
+.year-btn.active,
+.nav-btn.active,
+.tab-btn.active,
+.toggle-btn.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 16px 30px rgba(23, 67, 162, 0.24);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6c86af, #48617f);
+}
+
+.btn-danger,
+.btn-delete {
+    background: linear-gradient(135deg, var(--danger), #b33d4c);
+}
+
+.nav-btn i,
+.tab-btn i,
+.timeline-dot,
+.timeline-col-title .f7-icons,
+.month-group-title .f7-icons,
+footer a,
+.back-link,
+.linked-job {
+    color: var(--accent);
+}
+
+.timeline-wrap::before,
+thead,
+.controls,
+.filters,
+.nav-bar,
+.tabs,
+.data-grid-section,
+.modal-header,
+.journal-right-panel {
+    border-color: var(--line) !important;
+}
+
+.timeline-dot,
+.calendar-weekday {
+    background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+}
+
+.calendar-day.application,
+.calendar-event.application {
+    background: var(--accent);
+}
+
+.calendar-event.followup {
+    background: var(--success);
+}
+
+.calendar-event.closure {
+    background: var(--danger);
+}
+
+.status-badge,
+.status-active,
+.status-replied,
+.status-converted,
+.status-applied,
+.status-interviewing,
+.status-under-consideration,
+.status-offer,
+.status-accepted,
+.status-hired,
+.status-phone-screen,
+.status-take-home,
+.status-negotiating,
+.status-background-check,
+.status-technical-round {
+    border: 1px solid transparent;
+}
+
+.status-active,
+.status-converted,
+.status-offer,
+.status-accepted,
+.status-hired,
+.status-background-check {
+    background: rgba(31, 143, 122, 0.12);
+    color: #106d5d;
+    border-color: rgba(31, 143, 122, 0.2);
+}
+
+.status-replied,
+.status-applied,
+.status-phone-screen,
+.status-technical-round {
+    background: rgba(47, 109, 255, 0.1);
+    color: var(--accent-night);
+    border-color: rgba(47, 109, 255, 0.18);
+}
+
+.status-interviewing,
+.status-under-consideration,
+.status-take-home,
+.status-negotiating {
+    background: rgba(201, 137, 35, 0.12);
+    color: #8a5c15;
+    border-color: rgba(201, 137, 35, 0.2);
+}
+
+.status-rejected,
+.status-no-response,
+.status-withdrawn,
+.status-ghosted {
+    background: rgba(210, 79, 95, 0.11);
+    color: #9f3342;
+    border-color: rgba(210, 79, 95, 0.18);
+}
+
+input,
+select,
+textarea,
+.filter-group input,
+.filter-group select,
+.form-group input,
+.form-group select,
+.form-group textarea {
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(24, 56, 98, 0.14);
+    color: var(--text);
+    border-radius: 14px;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.filter-group input:focus,
+.filter-group select:focus,
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(47, 109, 255, 0.12);
+}
+
+tbody tr:hover,
+.calendar-day:hover {
+    background: rgba(217, 231, 255, 0.36);
+}
+
+.dt-button,
+button.dt-button {
+    border-radius: 999px !important;
+    background: white !important;
+    color: var(--accent-deep) !important;
+    border: 1px solid rgba(47, 109, 255, 0.22) !important;
+}
+
+.jobflow-auth-shell {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 9999;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(248, 252, 255, 0.94);
+    border: 1px solid var(--line);
+    box-shadow: 0 16px 36px rgba(16, 44, 84, 0.16);
+    backdrop-filter: blur(10px);
+    font-size: 0.92rem;
+}
+
+.jobflow-auth-user {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.jobflow-auth-logout {
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, var(--accent-night), var(--accent-deep));
+    color: white;
+    cursor: pointer;
+}

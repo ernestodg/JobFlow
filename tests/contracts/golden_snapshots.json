@@ -1,0 +1,99 @@
+{
+  "api_stats_response": {
+    "total_applications": 42,
+    "response_rate": 23.8,
+    "interview_rate": 14.3,
+    "offers": 2,
+    "status_breakdown": {
+      "applied": 15,
+      "phone_screen": 8,
+      "interview": 12,
+      "offer": 2,
+      "rejected": 5
+    },
+    "source_breakdown": {
+      "website": 20,
+      "linkedin": 15,
+      "referral": 5,
+      "recruiter": 2
+    },
+    "monthly_activity": [
+      {"month": "2024-01", "applications": 8},
+      {"month": "2024-02", "applications": 12},
+      {"month": "2024-03", "applications": 15},
+      {"month": "2024-04", "applications": 7}
+    ]
+  },
+  
+  "api_stats2_scatter_response": {
+    "data": [
+      {
+        "x": 30,
+        "y": 5,
+        "size": 3,
+        "color": "website",
+        "text": "Company A<br>Position: Software Engineer<br>Days: 30<br>Followups: 5",
+        "company": "Company A",
+        "position": "Software Engineer"
+      },
+      {
+        "x": 15,
+        "y": 2,
+        "size": 1,
+        "color": "linkedin",
+        "text": "Company B<br>Position: Frontend Developer<br>Days: 15<br>Followups: 2",
+        "company": "Company B",
+        "position": "Frontend Developer"
+      }
+    ],
+    "layout": {
+      "title": "Application Timeline vs Engagement",
+      "xaxis": {"title": "Days Since Application"},
+      "yaxis": {"title": "Number of Followups"}
+    }
+  },
+  
+  "api_stats2_heatmap_response": {
+    "data": [
+      {
+        "z": [[3, 2, 1], [2, 4, 2], [1, 2, 3]],
+        "x": ["Website", "LinkedIn", "Referral"],
+        "y": ["Applied", "Interview", "Offer"],
+        "type": "heatmap",
+        "colorscale": "Viridis"
+      }
+    ],
+    "layout": {
+      "title": "Application Sources vs Status Heatmap",
+      "xaxis": {"title": "Source"},
+      "yaxis": {"title": "Status"}
+    }
+  },
+  
+  "data_format_jobs": [
+    {
+      "id": "job_1",
+      "company": "Test Company",
+      "position": "Test Position",
+      "status": "applied",
+      "applied_date": "2024-01-01",
+      "source": "website",
+      "notes": "Test notes",
+      "salary_min": 80000,
+      "salary_max": 120000,
+      "location": "Remote",
+      "job_url": "https://example.com/job"
+    }
+  ],
+  
+  "data_format_followups": [
+    {
+      "id": "followup_1",
+      "job_id": "job_1",
+      "date": "2024-01-08",
+      "type": "email",
+      "notes": "Sent follow-up email",
+      "response": false
+    }
+  ]
+}

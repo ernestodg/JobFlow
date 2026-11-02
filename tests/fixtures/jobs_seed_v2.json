@@ -1,0 +1,81 @@
+{
+  "schema_version": 2,
+  "last_modified": "2025-11-12T00:00:00.000000+00:00",
+  "jobs": [
+    {
+      "company": "TechCorp Inc",
+      "title": "Senior Software Engineer",
+      "date_applied": "2025-10-01",
+      "status": "Applied",
+      "stage": "applied",
+      "source": "LinkedIn",
+      "location": "San Francisco, CA",
+      "job_type": "Full-time",
+      "salary_range": "$120,000 - $150,000",
+      "url": "https://techcorp.com/jobs/123",
+      "notes": "Great company culture, remote-friendly",
+      "country": "US",
+      "job_id": "job_test_001"
+    },
+    {
+      "company": "StartupXYZ",
+      "title": "Frontend Developer",
+      "date_applied": "2025-10-05",
+      "status": "Interviewing",
+      "stage": "interview",
+      "source": "AngelList",
+      "location": "Remote",
+      "job_type": "Full-time",
+      "salary_range": "$80,000 - $110,000",
+      "url": "https://startupxyz.com/careers",
+      "notes": "Fast-paced startup environment",
+      "country": "US",
+      "job_id": "job_test_002"
+    },
+    {
+      "company": "BigTech Solutions",
+      "title": "DevOps Engineer",
+      "date_applied": "2025-09-20",
+      "status": "Rejected",
+      "stage": "closed",
+      "source": "Indeed",
+      "location": "Seattle, WA",
+      "job_type": "Full-time",
+      "salary_range": "$100,000 - $130,000",
+      "url": "https://bigtech.com/jobs/456",
+      "notes": "Didn't meet experience requirements",
+      "country": "US",
+      "job_id": "job_test_003"
+    },
+    {
+      "company": "FinanceFirst",
+      "title": "Full Stack Developer",
+      "date_applied": "2025-10-10",
+      "status": "Offer",
+      "stage": "offer",
+      "source": "Company Website",
+      "location": "New York, NY",
+      "job_type": "Full-time",
+      "salary_range": "$130,000 - $160,000",
+      "url": "https://financefirst.com/careers/789",
+      "notes": "Received offer, negotiating salary",
+      "country": "US",
+      "job_id": "job_test_004"
+    },
+    {
+      "company": "ConsultingPro",
+      "title": "Technical Consultant",
+      "date_applied": "2025-10-15",
+      "status": "Applied",
+      "stage": "applied",
+      "source": "Glassdoor",
+      "location": "Chicago, IL",
+      "job_type": "Contract",
+      "salary_range": "$90/hour",
+      "url": "https://consultingpro.com/jobs/111",
+      "notes": "Contract position, 6-month duration",
+      "country": "US",
+      "job_id": "job_test_005"
+    }
+  ]
+}

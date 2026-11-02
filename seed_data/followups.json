@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "id": "demo_fu_001",
+      "job_id": "demo_job_001",
+      "timestamp": "2025-01-12T10:00:00Z",
+      "type": "email",
+      "summary": "Sent introductory follow-up email.",
+      "next_action": {
+        "what": "Wait for recruiter reply",
+        "when": "2025-01-15",
+        "done": false
+      },
+      "outlook": {},
+      "notes": "Demonstration follow-up."
+    }
+  ]
+}

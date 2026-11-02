@@ -1,0 +1,19 @@
+{
+  "schema_version": 2,
+  "jobs": [
+    {
+      "job_id": "demo_job_001",
+      "company": "Example Corp",
+      "title": "Data Analyst",
+      "date_applied": "2025-01-10",
+      "status": "Applied",
+      "stage": "applied",
+      "source": "LinkedIn",
+      "location": "Remote",
+      "job_type": "Full-time",
+      "salary_range": "",
+      "url": "https://example.com/job",
+      "notes": "Demo job to illustrate UI."
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Flask
+instance/
+.webassets-cache
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Logs
+*.log
+
+# Generated files
+sankey_chart.html
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+# Uncomment if you want to keep jobs.json out of version control
+# jobs.json
+
+# ==================================================
+# JobFlow — Private Data Protection
+# ==================================================
+/data/*
+!/data/.gitkeep
+
+*.sqlite
+*.sqlite3
+*.db
+*.sql
+
+*.backup
+*.bak
+*.bak1
+*.bak_auto_*
+
+.env
+.env.*
+!.env.example
+
+*.pem
+*.key
+*.p12
+*.pfx
+
+__pycache__/
+.pytest_cache/
+
+# JobFlow privacy exclusions
+/data/*
+!/data/.gitkeep
+*.bak*
+*.backup
+*.sqlite
+*.sqlite3
+*.db
+*.sql
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Private runtime inputs and backups
+.env
+.env.*
+!.env.example
+*.orig
+*.bundle
+backups/
+exports/
+*.sql
+*.db
+*.sqlite*

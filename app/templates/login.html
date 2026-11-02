@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobFlow Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #10223d;
+            --muted: #4d6486;
+            --card: rgba(248, 252, 255, 0.94);
+            --line: rgba(24, 56, 98, 0.14);
+            --accent: #2f6dff;
+            --accent-2: #1743a2;
+            --error: #b73d4c;
+            --bg-1: #f0f7ff;
+            --bg-2: #dbeafe;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Source Sans 3', sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(114, 176, 255, 0.42), transparent 32%),
+                radial-gradient(circle at bottom right, rgba(155, 224, 255, 0.34), transparent 34%),
+                linear-gradient(135deg, var(--bg-1), var(--bg-2));
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        .shell {
+            width: min(960px, 100%);
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        .hero,
+        .card {
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 24px 70px rgba(16, 44, 84, 0.14);
+        }
+
+        .hero {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .eyebrow {
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 4vw, 3.6rem);
+            line-height: 1;
+            margin: 16px 0;
+            max-width: 10ch;
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            max-width: 44ch;
+            color: var(--muted);
+        }
+
+        .hero-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .hero-list div {
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(24, 56, 98, 0.08);
+        }
+
+        .card {
+            padding: 28px;
+        }
+
+        .tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .tabs button {
+            border: 1px solid var(--line);
+            background: white;
+            color: var(--ink);
+            border-radius: 999px;
+            padding: 12px 14px;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .tabs button.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            border-color: transparent;
+        }
+
+        form {
+            display: grid;
+            gap: 14px;
+        }
+
+        label {
+            display: grid;
+            gap: 6px;
+            font-size: 0.93rem;
+            color: var(--muted);
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(24, 56, 98, 0.14);
+            background: white;
+            font: inherit;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.92rem;
+            color: var(--muted);
+        }
+
+        .checkbox input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+        }
+
+        .actions {
+            display: grid;
+            gap: 10px;
+        }
+
+        button[type="submit"] {
+            border: 0;
+            border-radius: 14px;
+            padding: 13px 16px;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            color: white;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        }
+
+        .secondary {
+            background: linear-gradient(135deg, #6c86af, #48617f);
+        }
+
+        .status {
+            min-height: 22px;
+            font-size: 0.92rem;
+            color: var(--error);
+        }
+
+        .muted-link {
+            color: var(--muted);
+            text-decoration: none;
+        }
+
+        .muted-link:hover { text-decoration: underline; }
+
+        @media (max-width: 840px) {
+            .shell {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <section class="hero">
+            <div>
+                <div class="eyebrow">Local Multi-User Job Tracking</div>
+                <h1>Sign in to your private JobFlow workspace.</h1>
+                <p>Your jobs, leads, follow-ups, and journal entries are now isolated per account and stored in a relational database, not shared JSON files.</p>
+            </div>
+            <div class="hero-list">
+                <div>PostgreSQL-backed data isolation per user.</div>
+                <div>Username and password login, with optional PIN for faster access.</div>
+                <div>Session-based auth for local use with protected APIs.</div>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="tabs">
+                <button id="password-tab" class="active" type="button">Password Login</button>
+                <button id="pin-tab" type="button">Quick PIN</button>
+            </div>
+
+            <form id="password-form">
+                <label>
+                    Username
+                    <input id="username" name="username" autocomplete="username" required>
+                </label>
+                <label>
+                    Password
+                    <input id="password" name="password" type="password" autocomplete="current-password" required>
+                </label>
+                <div class="row">
+                    <label class="checkbox">
+                        <input id="remember" type="checkbox">
+                        Remember this session
+                    </label>
+                    <a class="muted-link" href="/register">Create account</a>
+                </div>
+                <div class="actions">
+                    <button type="submit">Login</button>
+                </div>
+            </form>
+
+            <form id="pin-form" hidden>
+                <label>
+                    Username
+                    <input id="pin-username" autocomplete="username">
+                </label>
+                <label>
+                    PIN
+                    <input id="pin" type="password" inputmode="numeric" maxlength="12">
+                </label>
+                <div class="actions">
+                    <button class="secondary" type="submit">Quick Login</button>
+                </div>
+            </form>
+
+            <div class="status" id="status"></div>
+        </section>
+    </div>
+
+    <script>
+        const nextPath = new URLSearchParams(window.location.search).get('next') || '/';
+        const statusNode = document.getElementById('status');
+        const passwordForm = document.getElementById('password-form');
+        const pinForm = document.getElementById('pin-form');
+        const passwordTab = document.getElementById('password-tab');
+        const pinTab = document.getElementById('pin-tab');
+
+        function setMode(mode) {
+            const passwordMode = mode === 'password';
+            passwordForm.hidden = !passwordMode;
+            pinForm.hidden = passwordMode;
+            passwordTab.classList.toggle('active', passwordMode);
+            pinTab.classList.toggle('active', !passwordMode);
+            statusNode.textContent = '';
+        }
+
+        passwordTab.addEventListener('click', () => setMode('password'));
+        pinTab.addEventListener('click', () => setMode('pin'));
+
+        passwordForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            statusNode.textContent = '';
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: document.getElementById('username').value.trim(),
+                    password: document.getElementById('password').value,
+                    remember: document.getElementById('remember').checked,
+                }),
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                statusNode.textContent = data.error || 'Login failed.';
+                return;
+            }
+            window.location.href = nextPath;
+        });
+
+        pinForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            statusNode.textContent = '';
+            const response = await fetch('/api/auth/pin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: document.getElementById('pin-username').value.trim(),
+                    pin: document.getElementById('pin').value,
+                }),
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                statusNode.textContent = data.error || 'PIN login failed.';
+                return;
+            }
+            window.location.href = nextPath;
+        });
+    </script>
+</body>
+</html>

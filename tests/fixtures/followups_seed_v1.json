@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "fu_test_001",
+      "job_id": "job_test_001",
+      "timestamp": "2025-10-03T10:30:00.000000Z",
+      "author": "user",
+      "type": "note",
+      "summary": "Application submitted",
+      "details": "Successfully submitted application through LinkedIn",
+      "next_action": {
+        "what": "Follow up in one week",
+        "when": "2025-10-10",
+        "done": false
+      },
+      "tags": ["application", "initial"]
+    },
+    {
+      "id": "fu_test_002",
+      "job_id": "job_test_002",
+      "timestamp": "2025-10-06T14:15:00.000000Z",
+      "author": "user",
+      "type": "status_change",
+      "summary": "Phone screen scheduled",
+      "details": "HR contacted me to schedule initial phone screen for next week",
+      "next_action": {
+        "what": "Prepare for phone screen",
+        "when": "2025-10-12",
+        "done": false
+      },
+      "tags": ["interview", "phone_screen"]
+    },
+    {
+      "id": "fu_test_003",
+      "job_id": "job_test_002",
+      "timestamp": "2025-10-12T09:00:00.000000Z",
+      "author": "user",
+      "type": "interview",
+      "summary": "Phone screen completed",
+      "details": "30-minute call with HR went well, moving to technical round",
+      "next_action": {
+        "what": "Technical interview preparation",
+        "when": "2025-10-18",
+        "done": false
+      },
+      "tags": ["interview", "technical"]
+    },
+    {
+      "id": "fu_test_004",
+      "job_id": "job_test_003",
+      "timestamp": "2025-09-25T16:45:00.000000Z",
+      "author": "user",
+      "type": "note",
+      "summary": "Rejection received",
+      "details": "Received rejection email citing lack of cloud experience",
+      "next_action": null,
+      "tags": ["rejection", "feedback"]
+    },
+    {
+      "id": "fu_test_005",
+      "job_id": "job_test_004",
+      "timestamp": "2025-10-12T11:30:00.000000Z",
+      "author": "user",
+      "type": "offer",
+      "summary": "Offer received",
+      "details": "Base salary $140k, additional benefits discussed",
+      "next_action": {
+        "what": "Negotiate salary and benefits",
+        "when": "2025-10-15",
+        "done": false
+      },
+      "tags": ["offer", "negotiation"]
+    }
+  ]
+}

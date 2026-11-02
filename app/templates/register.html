@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobFlow Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #10223d;
+            --muted: #4d6486;
+            --line: rgba(24, 56, 98, 0.14);
+            --card: rgba(248, 252, 255, 0.96);
+            --accent: #2f6dff;
+            --accent-2: #1743a2;
+            --error: #b73d4c;
+            --bg: linear-gradient(180deg, #f0f7ff 0%, #e4eefb 100%);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background:
+                radial-gradient(circle at top left, rgba(114, 176, 255, 0.42), transparent 32%),
+                radial-gradient(circle at top right, rgba(155, 224, 255, 0.5), transparent 30%),
+                var(--bg);
+            font-family: 'Source Sans 3', sans-serif;
+            color: var(--ink);
+        }
+
+        .card {
+            width: min(560px, 100%);
+            padding: 32px;
+            border-radius: 24px;
+            border: 1px solid var(--line);
+            background: var(--card);
+            box-shadow: 0 24px 70px rgba(16, 44, 84, 0.14);
+        }
+
+        .eyebrow {
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            margin: 14px 0 10px;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1;
+        }
+
+        p {
+            margin: 0 0 22px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        form {
+            display: grid;
+            gap: 14px;
+        }
+
+        label {
+            display: grid;
+            gap: 6px;
+            color: var(--muted);
+            font-size: 0.93rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(24, 56, 98, 0.14);
+            background: white;
+            font: inherit;
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 14px;
+            padding: 13px 16px;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            color: white;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            margin-top: 12px;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .footer a:hover { text-decoration: underline; }
+
+        .status {
+            min-height: 22px;
+            color: var(--error);
+            font-size: 0.92rem;
+        }
+
+        @media (max-width: 640px) {
+            .split { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <section class="card">
+        <div class="eyebrow">Create Local User</div>
+        <h1>Register a private JobFlow account.</h1>
+        <p>Each account gets its own isolated jobs, leads, follow-ups, and journal history. Add an optional PIN if you want a faster local login flow later.</p>
+
+        <form id="register-form">
+            <label>
+                Username
+                <input id="username" autocomplete="username" required>
+            </label>
+            <div class="split">
+                <label>
+                    Password
+                    <input id="password" type="password" autocomplete="new-password" required>
+                </label>
+                <label>
+                    Confirm Password
+                    <input id="password-confirm" type="password" autocomplete="new-password" required>
+                </label>
+            </div>
+            <label>
+                Optional PIN
+                <input id="pin" type="password" inputmode="numeric" maxlength="12" placeholder="Optional quick login PIN">
+            </label>
+            <button type="submit">Create Account</button>
+        </form>
+
+        <div class="status" id="status"></div>
+        <div class="footer">
+            <span>Already registered?</span>
+            <a href="/login">Back to login</a>
+        </div>
+    </section>
+
+    <script>
+        const statusNode = document.getElementById('status');
+        document.getElementById('register-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            statusNode.textContent = '';
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('password-confirm').value;
+            if (password !== confirm) {
+                statusNode.textContent = 'Passwords do not match.';
+                return;
+            }
+
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: document.getElementById('username').value.trim(),
+                    password,
+                    pin: document.getElementById('pin').value,
+                    remember: true,
+                }),
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                statusNode.textContent = data.error || 'Registration failed.';
+                return;
+            }
+            window.location.href = '/';
+        });
+    </script>
+</body>
+</html>

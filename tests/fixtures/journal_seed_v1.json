@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "id": "journal_test_001",
+      "timestamp": "2025-10-01T08:30:00.000000Z",
+      "content": "Starting my job search today. Feeling optimistic about the opportunities ahead.",
+      "sentiment_score": 0.6,
+      "sentiment_label": "Positive",
+      "tags": ["job_search", "motivation"]
+    },
+    {
+      "id": "journal_test_002",
+      "timestamp": "2025-10-05T19:15:00.000000Z",
+      "content": "Had a great conversation with the startup team. They seem really passionate about their product.",
+      "sentiment_score": 0.8,
+      "sentiment_label": "Very Positive",
+      "tags": ["interview", "startup", "enthusiasm"]
+    },
+    {
+      "id": "journal_test_003",
+      "timestamp": "2025-09-25T20:30:00.000000Z",
+      "content": "Got rejected from BigTech Solutions. Disappointed but not giving up. Need to work on cloud skills.",
+      "sentiment_score": -0.3,
+      "sentiment_label": "Negative",
+      "tags": ["rejection", "learning", "cloud_skills"]
+    },
+    {
+      "id": "journal_test_004",
+      "timestamp": "2025-10-12T12:00:00.000000Z",
+      "content": "Received an offer from FinanceFirst! This is exactly what I was hoping for. Need to review the details carefully.",
+      "sentiment_score": 0.9,
+      "sentiment_label": "Very Positive",
+      "tags": ["offer", "excitement", "finance"]
+    },
+    {
+      "id": "journal_test_005",
+      "timestamp": "2025-10-15T17:45:00.000000Z",
+      "content": "Job search is taking longer than expected. Some days are harder than others.",
+      "sentiment_score": -0.1,
+      "sentiment_label": "Neutral",
+      "tags": ["reflection", "patience", "persistence"]
+    }
+  ],
+  "last_modified": "2025-11-12T00:00:00.000000+00:00"
+}

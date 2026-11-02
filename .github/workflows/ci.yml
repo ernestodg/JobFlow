@@ -1,0 +1,270 @@
+name: JobFlow CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.11, 3.12]
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+    
+    - name: Lint with ruff
+      run: |
+        ruff check . --output-format=github
+      continue-on-error: false
+    
+    - name: Type check with mypy
+      run: |
+        mypy app.py core_data.py utils.py --ignore-missing-imports
+      continue-on-error: true  # Allow type checking to be advisory for now
+    
+    - name: Run unit tests
+      run: |
+        pytest tests/unit/ -v --tb=short --cov=. --cov-report=xml --cov-report=term-missing
+      env:
+        PYTHONPATH: .
+    
+    - name: Run property-based tests
+      run: |
+        pytest tests/property/ -v --tb=short --hypothesis-show-statistics
+      env:
+        PYTHONPATH: .
+    
+    - name: Run integration tests
+      run: |
+        pytest tests/integration/ -v --tb=short
+      env:
+        PYTHONPATH: .
+    
+    - name: Run contract/snapshot tests
+      run: |
+        pytest tests/contracts/ -v --tb=short
+      env:
+        PYTHONPATH: .
+        # Don't update snapshots automatically in CI
+        UPDATE_SNAPSHOTS: 0
+    
+    - name: Check test coverage
+      run: |
+        coverage report --fail-under=90
+      continue-on-error: false
+    
+    - name: Upload coverage to Codecov
+      if: matrix.python-version == '3.11'
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install security tools
+      run: |
+        python -m pip install --upgrade pip
+        pip install bandit safety
+    
+    - name: Run bandit security linter
+      run: |
+        bandit -r . -x tests/ -f json -o bandit-report.json
+        bandit -r . -x tests/
+      continue-on-error: true
+    
+    - name: Check for known security vulnerabilities
+      run: |
+        safety check --json --output safety-report.json
+        safety check
+      continue-on-error: true
+    
+    - name: Upload security reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+          safety-report.json
+
+  mutation-testing:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'  # Only run on PRs to save resources
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install mutmut
+    
+    - name: Run mutation testing
+      run: |
+        mutmut run --paths-to-mutate app.py,core_data.py,utils.py
+        mutmut results --ci-badge > mutation-badge.json
+      continue-on-error: true
+      env:
+        PYTHONPATH: .
+    
+    - name: Upload mutation testing results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: mutation-report
+        path: |
+          .mutmut-cache
+          mutation-badge.json
+
+  performance:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest-benchmark memory-profiler
+    
+    - name: Run performance benchmarks
+      run: |
+        pytest tests/performance/ -v --benchmark-only --benchmark-json=benchmark-results.json
+      continue-on-error: true
+      env:
+        PYTHONPATH: .
+    
+    - name: Upload performance results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: performance-report
+        path: benchmark-results.json
+
+  compatibility:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run backward compatibility tests
+      run: |
+        # Test against golden data snapshots
+        pytest tests/contracts/ -v --tb=short -k "test_api_compatibility"
+        
+        # Test data format stability
+        python -c "
+        import json
+        import sys
+        from core_data import load_jobs, load_followups
+        
+        # Verify data loading doesn't break
+        try:
+            jobs = load_jobs()
+            followups = load_followups() 
+            print(f'✓ Successfully loaded {len(jobs)} jobs, {len(followups)} followups')
+        except Exception as e:
+            print(f'✗ Data loading failed: {e}')
+            sys.exit(1)
+        "
+      env:
+        PYTHONPATH: .
+
+  build-artifact:
+    needs: [test, security, compatibility]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install build
+    
+    - name: Create distribution package
+      run: |
+        python -m build
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: dist-package
+        path: dist/
+    
+    - name: Create deployment archive
+      run: |
+        tar -czf jobflow-tracker.tar.gz \
+          app.py core_data.py utils.py chart.py \
+          templates/ requirements.txt \
+          --exclude='__pycache__' --exclude='*.pyc'
+    
+    - name: Upload deployment archive
+      uses: actions/upload-artifact@v3
+      with:
+        name: deployment-archive
+        path: jobflow-tracker.tar.gz

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "entry_id": "demo_jrnl_001",
+      "timestamp": "2025-01-11T08:00:00Z",
+      "source": "manual",
+      "title": "Demo Journal Entry",
+      "text": "Feeling optimistic about the job search today!",
+      "tags": ["mood:positive", "demo"],
+      "linked_job_id": "demo_job_001",
+      "sentiment": {
+        "score": 0.76,
+        "label": "pos"
+      }
+    }
+  ]
+}

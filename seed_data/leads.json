@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "leads": [
+    {
+      "lead_id": "lead_001",
+      "name": "Jane Doe",
+      "company": "Example Organization",
+      "role": "Recruiter",
+      "email": "jane@example.com",
+      "linkedin": "https://example.com/demo-profile",
+      "contact_method": "email",
+      "date_contacted": "2025-11-05",
+      "status": "Active",
+      "source": "Networking",
+      "topic": "Inquiry about software architecture vacancies",
+      "notes": "Sent intro email asking about upcoming opportunities. Mentioned interest in roles in patent management systems.",
+      "next_action": {
+        "what": "Follow up if no answer",
+        "when": "2025-11-12",
+        "done": false
+      },
+      "linked_job_id": null
+    }
+  ]
+}

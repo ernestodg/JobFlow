@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.spec
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Data & backups (use the named volume instead)
+data/
+*.bak*
+*.orig
+*.backup
+
+# Dev/test files
+.pytest_cache/
+.coverage
+htmlcov/
+tests/
+test_*.py
+*_test.py
+
+# Dev tools
+.git/
+.gitignore
+*.md
+docs/
+scripts/
+assets/
+seed_data/
+
+# IDE
+.vscode/
+.idea/
+
+# Docker files themselves
+docker-compose.yml
+.dockerignore
+
+# Logs
+*.log
+
+# Private runtime inputs and backups
+.env
+.env.*
+!.env.example
+*.orig
+*.bundle
+backups/
+exports/
+*.sql
+*.db
+*.sqlite*
